@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from fake_useragent import UserAgent
 import random
 import smtplib
+load_dotenv()
 ua=UserAgent()
 amazon_url="https://appbrewery.github.io/instant_pot/"
 headers = {
@@ -24,8 +25,9 @@ product_title=soup.find(id="productTitle").get_text().split("9-in-1")[1]
 # print(actual_price)
 message=f"your product\n{product_title}\n it price is now affordable,it is {actual_price}"
 
-email_name="amp081573@gmail.com"
-password="ylpj vrmh nnvc xnah"
+email_name=os.getenv("my_email")
+password=os.getenv("email_password")
+receiver=os.getenv("to_address")
 #     email sender part
 connection=smtplib.SMTP("smtp.gmail.com",587)
 connection.starttls()#this secures our website from 3rd party intercepts
@@ -33,9 +35,8 @@ connection.starttls()#this secures our website from 3rd party intercepts
 connection.login(user=email_name,password=password)
 connection.sendmail(
     from_addr=email_name,
-    to_addrs="adarshgowda1130@gmail.com",
+    to_addrs=receiver,
     msg=f"Subject: Price Alert!\n\n{message}".encode('utf-8')
 )
 connection.close()
-# print(email_name)
-# print(password)
+
