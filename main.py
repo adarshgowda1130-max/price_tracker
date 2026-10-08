@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from fake_useragent import UserAgent
 import random
+import smtplib
 ua=UserAgent()
 amazon_url="https://appbrewery.github.io/instant_pot/"
 headers = {
@@ -14,15 +15,27 @@ headers = {
 data=requests.get(url=amazon_url,headers=headers).text
 soup=BeautifulSoup(data,"html.parser")
 # print(soup.prettify())
+#product price
 price=soup.find(class_="a-offscreen").get_text()
-# product_title=soup.find(id="productTitle").get_text().split("9-in-1","\t")[1]
-# print(product_title)
-title = soup.find(id="productTitle").get_text().strip()
-print(title)
-
 actual_price=float(price.split("$")[1])
-print(actual_price)
-# print(type(actual_price))
-# load_dotenv()
-# api_key=os.getenv("API_KEY")
-# print(api_key)
+#product title
+product_title=soup.find(id="productTitle").get_text().split("9-in-1")[1]
+# print(product_title)
+# print(actual_price)
+message=f"your product\n{product_title}\n it price is now affordable,it is {actual_price}"
+
+email_name="amp081573@gmail.com"
+password="ylpj vrmh nnvc xnah"
+#     email sender part
+connection=smtplib.SMTP("smtp.gmail.com",587)
+connection.starttls()#this secures our website from 3rd party intercepts
+
+connection.login(user=email_name,password=password)
+connection.sendmail(
+    from_addr=email_name,
+    to_addrs="adarshgowda1130@gmail.com",
+    msg=f"Subject: Price Alert!\n\n{message}".encode('utf-8')
+)
+connection.close()
+# print(email_name)
+# print(password)
