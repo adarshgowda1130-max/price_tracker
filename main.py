@@ -29,14 +29,18 @@ email_name=os.getenv("my_email")
 password=os.getenv("email_password")
 receiver=os.getenv("to_address")
 #     email sender part
-connection=smtplib.SMTP("smtp.gmail.com",587)
-connection.starttls()#this secures our website from 3rd party intercepts
 
-connection.login(user=email_name,password=password)
-connection.sendmail(
-    from_addr=email_name,
-    to_addrs=receiver,
-    msg=f"Subject: Price Alert!\n\n{message}".encode('utf-8')
-)
-connection.close()
+if actual_price<=100:
+    try:
+        connection=smtplib.SMTP("smtp.gmail.com",587)
+        connection.starttls()#this secures our website from 3rd party intercepts
 
+        connection.login(user=email_name,password=password)
+        connection.sendmail(
+            from_addr=email_name,
+            to_addrs=receiver,
+            msg=f"subject:price alert!!\n\n{message}".encode("utf-8")
+        )
+        connection.close()
+    except Exception as e:
+        print(f"error accored while sending mail:{e}")
